@@ -1,0 +1,56 @@
+{% extends 'account/base_account.html' %}
+{% load static thumbnail %}
+
+{% block link2 %}link-item-active{% endblock %}
+
+{% block content-area %}
+    <h1>Редактировать данные</h1>
+    <div class="form-wrapper">
+        <form action="{{ account.get_update_url }}" method="post" enctype="multipart/form-data">
+        {% csrf_token %}
+
+            <div class="form-group">
+                {% if form.age.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.age.errors }}
+                    </div>
+                {% endif %}
+
+                <label for="{{ form.age.id_for_label }}">Возраст:</label>
+                {{ form.age }}
+            </div>
+
+            <div class="form-group">
+                {% if form.phone.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.phone.errors }}
+                    </div>
+                {% endif %}
+
+                <label for="{{ form.phone.id_for_label }}">Телефон:</label>
+                {{ form.phone }}
+            </div>
+
+            <div class="form-group">
+                {% if form.photo.errors %}
+                    <div class="alert alert-danger">
+                        {{ form.photo.errors }}
+                    </div>
+                {% endif %}
+
+                <label for="{{ form.photo.id_for_label }}">Фотография:</label>
+                {{ form.photo }}
+            </div>
+
+        <div class="button-line">
+            <button type="submit" class="button button-orange button-primary">Отредактировать</button>
+        </div>
+        {% if success %}
+            <div class="alert alert-success mt-4" role="alert">
+                Изменения успешно применены.
+            </div>
+        {% endif %}
+        </div>
+        </form>
+    </div>
+{% endblock %}

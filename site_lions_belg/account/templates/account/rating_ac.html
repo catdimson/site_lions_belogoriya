@@ -1,0 +1,99 @@
+{% extends 'account/base_account.html' %}
+{% load static thumbnail %}
+
+{% block addons_css %}
+    {% comment %}<script src="{% static 'libs/tablesorter-master/dist/css/theme.default.min.css' %}"></script>{% endcomment %}
+{% endblock %}
+
+{% block jquery-addons %}
+    <script src="{% static 'libs/tablesorter-master/dist/js/jquery.tablesorter.js' %}"></script>
+{% endblock %}
+
+{% block link4 %}link-item-active{% endblock %}
+
+{% block content-area %}
+    <div id="tables-wrap">
+        <h1>Рейтинговые таблицы</h1>
+        <h5>Весовая категория: {{ sp_current_weight.0.weight_category.weight_category }}</h5>
+        <table class="tablesorter table table-hover table-dark" id="table-current-weight">
+            <thead>
+                <tr>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Возраст</th>
+                    <th scope="col">Пояс</th>
+                    <th scope="col">Рейтинг</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in sp_current_weight %}
+                    <tr {% if account == sp %}class="current-player"{% endif %}>
+                        <th scope="row">{{ sp.name.last_name }} {{ sp.name.first_name }}</th>
+                        <td>{{ sp.age }}</td>
+                        <td>{{ sp.belt.color }}</td>
+                        <td>{{ sp.rating }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+
+        <h5>Вне весовой: </h5>
+        <table class="tablesorter all table table-hover table-dark" id="table-all-weight">
+            <thead>
+                <tr>
+                    <th scope="col">Имя</th>
+                    <th scope="col">Возраст</th>
+                    <th scope="col">Весовая</th>
+                    <th scope="col">Пояс</th>
+                    <th scope="col">Рейтинг</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for sp in all_sp %}
+                    <tr {% if account == sp %}class="current-player"{% endif %}>
+                        <th scope="row">{{ sp.name.last_name }} {{ sp.name.first_name }}</th>
+                        <td>{{ sp.age }}</td>
+                        <td>{{ sp.weight_category.weight_category }}</td>
+                        <td>{{ sp.belt.color }}</td>
+                        <td>{{ sp.rating }}</td>
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+        <div id="other-weights">
+            {% for list in sp_other_weight_list %}
+                <h5>Весовая категория: {{ list.0.weight_category.weight_category }}</h5>
+                    <table class="tablesorter-weight tablesorter table table-hover table-dark" id="ta">
+                        <thead>
+                            <tr>
+                                <th scope="col">Имя</th>
+                                <th scope="col">Возраст</th>
+                                <th scope="col">Пояс</th>
+                                <th scope="col">Рейтинг</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for sp in list %}
+                                <tr>
+                                    <th scope="row">{{ sp.name.last_name }} {{ sp.name.first_name }}</th>
+                                    <td>{{ sp.age }}</td>
+                                    <td>{{ sp.belt.color }}</td>
+                                    <td>{{ sp.rating }}</td>
+                                </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block specific_scripts %}
+    <script>
+        $(document).ready(function() {
+            $('#table-current-weight').tablesorter({ sortList : [[ 3 , 1 ]] });
+            $('#table-all-weight').tablesorter({ sortList : [[ 4 , 1 ]] });
+            let other_w = $('.tablesorter-weight');
+            other_w.tablesorter();
+        })
+    </script>
+{% endblock %}

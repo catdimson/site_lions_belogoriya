@@ -1,0 +1,22 @@
+{% extends 'account/base_account.html' %}
+{% load static thumbnail %}
+
+{% block link1 %}link-item-active{% endblock %}
+
+{% block content-area %}
+    <h1>{{ account.name.last_name }} {{ account.name.first_name }}</h1>
+    <div class="img-wrapper">
+    <img class="img-fluid" src="
+        {% if not account.photo %}
+            {% static 'img/account/not_photo.jpg' %}
+        {% else %}
+            {% thumbnail account.photo 300x450 %}
+        {% endif %}"
+         title="{{ account.name }}">
+    </div>
+    <h5>Возраст: {{ account.age }}</h5>
+    <h5>Пояс: {{ account.belt }}</h5>
+    <h5>Внутриклубный рейтинг: {{ account.rating }}</h5>
+    <h5>Весовая категория: {{ account.weight_category }}</h5>
+    <h5>Телефон: {{ account.phone }}</h5>
+{% endblock %}

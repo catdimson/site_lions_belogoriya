@@ -1,0 +1,77 @@
+{% extends 'base_news.html' %}
+{% load thumbnail static %}
+
+{% block content %}
+    <div class="news-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-12">
+                    <p class="new-date"><small>{{ new.create_time|date:"D d.m.Y" }}</small></p>
+                    <h2 class="new-title">{{ new.title }}</h2>
+                </div>
+                <div class="col-md-8">
+                    <div class="new-wrapper">
+                        <div class="new-image">
+                            <img class="img-fluid" src="{{ new.image.url }}" title="{{ new.title }}">
+                        </div>
+                        <div class="new-description>">
+                            <p>{{ new.description|safe }}</p>
+                        </div>
+                        <div class="author">
+                            <p class="text-right font-italic">{{ new.author.username }}, {{ new.create_time|date:"D d.m.Y" }}</p>
+                        </div>
+                        <div class="social">
+                            <script src="https://yastatic.net/es5-shims/0.0.2/es5-shims.min.js"></script>
+                            <script src="https://yastatic.net/share2/share.js"></script>
+                            <div style="text-align: right" class="ya-share2" data-services="vkontakte,facebook,odnoklassniki,viber,whatsapp"></div>
+                        </div>
+
+                        {% comment %}Комментарии Disqus{% endcomment %}
+                        <div class="new-comment">
+                            <div id="disqus_thread"></div>
+                            <script>
+
+                            /**
+                            *  RECOMMENDED CONFIGURATION VARIABLES: EDIT AND UNCOMMENT THE SECTION BELOW TO INSERT DYNAMIC VALUES FROM YOUR PLATFORM OR CMS.
+                            *  LEARN WHY DEFINING THESE VARIABLES IS IMPORTANT: https://disqus.com/admin/universalcode/#configuration-variables*/
+                            /*
+                            var disqus_config = function () {
+                            this.page.url = PAGE_URL;  // Replace PAGE_URL with your page's canonical URL variable
+                            this.page.identifier = PAGE_IDENTIFIER; // Replace PAGE_IDENTIFIER with your page's unique identifier variable
+                            };
+                            */
+                            (function() { // DON'T EDIT BELOW THIS LINE
+                            var d = document, s = d.createElement('script');
+                            s.src = 'https://tkdbel.disqus.com/embed.js';
+                            s.setAttribute('data-timestamp', +new Date());
+                            (d.head || d.body).appendChild(s);
+                            })();
+                            </script>
+                        </div>
+                    </div>
+                </div>
+                <div class="col-md-4">
+                    <div class="sidebar-right">
+                        <div class="categories-news">
+                            <h3>Категории: </h3>
+                            <ul>
+                                {% for cat in categories %}
+                                    <li {% if cat == new.category %}class="active-link"{% endif %}><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="tags-news">
+                            <h3>Тэги: </h3>
+                            <ul>
+                                {% for tg in tags %}
+                                    <li {% if tg in new.tag.all %}class="active-link"{% endif %}><a href="{{ tg.get_absolute_url }}">{{ tg.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+

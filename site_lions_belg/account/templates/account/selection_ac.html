@@ -1,0 +1,95 @@
+{% extends 'account/base_account.html' %}
+{% load static thumbnail %}
+
+{% block addons_css %}
+    {% comment %}<script src="{% static 'libs/tablesorter-master/dist/css/theme.default.min.css' %}"></script>{% endcomment %}
+{% endblock %}
+
+{% block jquery-addons %}
+    <script src="{% static 'libs/tablesorter-master/dist/js/jquery.tablesorter.js' %}"></script>
+{% endblock %}
+
+{% block link5 %}link-item-active{% endblock %}
+
+{% block content-area %}
+    <h1>Подбор соперника</h1>
+    <div class="row">
+        <div class="col-lg-8">
+        <div id="tables-wrap">
+            <h5>Возможные соперники: </h5>
+            <table class="tablesorter table table-hover table-dark" id="table-statistic">
+                <thead>
+                    <tr>
+                        <th scope="col">Имя</th>
+                        <th scope="col">Р.-К.</th>
+                        <th scope="col">Р.-Г.</th>
+                        <th scope="col">Н.-К.</th>
+                        <th scope="col">Н.-Г.</th>
+                        <th scope="col">Н.-Г.Р.</th>
+                        <th scope="col">Рейтинг</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for stat in statistic %}
+                        <tr {% if account == stat.sportsman %}class="current-player"{% endif %}>
+                            <th scope="row">{{ stat.sportsman.name.last_name }} {{ stat.sportsman.name.first_name }}</th>
+                            <td>{{ stat.handstrikes }}</td>
+                            <td>{{ stat.handstrikes_tohead }}</td>
+                            <td>{{ stat.kicks }}</td>
+                            <td>{{ stat.kicks_tohead }}</td>
+                            <td>{{ stat.rotate_kicks }}</td>
+                            <td>{{ stat.sportsman.rating }}</td>
+                        </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+            <h6>Обозначения колонок:</h6>
+            <ul>
+                <li>Р.-К. - количество ударов рукой в корпус</li>
+                <li>Р.-Г. - количество ударов рукой в голову</li>
+                <li>Н.-К. - количество ударов ногой в корпус</li>
+                <li>Н.-Г. - количество ударов ногой в голову</li>
+                <li>Н.-Г.Р. - количество ударов ногой в голову с разворота</li>
+            </ul>
+        </div>
+        <div class="col-lg-4">
+            <h5>Подходящие соперники:</h5>
+            <h6>Для подготовки к соревнованиям:</h6>
+            <ul>
+                {% if not for_tournaments %}
+                    <li>Подходящих соперников не найдено</li>
+                {% endif %}
+                {% for sp in for_tournaments %}
+                    <li>{{ sp.name.first_name }} {{ sp.name.last_name }}</li>
+                {% endfor %}
+            </ul>
+            <h6>Для улучшения навыка работы руками:</h6>
+            <ul>
+                {% if not for_hands %}
+                    <li>Подходящих соперников не найдено</li>
+                {% endif %}
+                {% for sp in for_hands %}
+                    <li>{{ sp.name.first_name }} {{ sp.name.last_name }}</li>
+                {% endfor %}
+            </ul>
+            <h6>Для улучшения навыка работы ногами:</h6>
+            <ul>
+                {% if not for_foots %}
+                    <li>Подходящих соперников не найдено</li>
+                {% endif %}
+                {% for sp in for_foots %}
+                    <li>{{ sp.name.first_name }} {{ sp.name.last_name }}</li>
+                {% endfor %}
+            </ul>
+        </div>
+    </div>
+{% endblock %}
+
+{% block specific_scripts %}
+    <script>
+        $(document).ready(function() {
+            $('#table-statistic').tablesorter({ sortList : [[ 6 , 1 ]] });
+        })
+    </script>
+{% endblock %}

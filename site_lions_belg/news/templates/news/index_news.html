@@ -1,0 +1,243 @@
+{% extends 'base_news.html' %}
+{% load thumbnail static %}
+
+{% block specific_style %}
+    {% comment %}<link rel="stylesheet" href="{% static 'libs/fancybox-master/dist/jquery.fancybox.css' %}">{% endcomment %}
+{% endblock %}
+
+{% block content %}
+    <div class="news-wrapper">
+        <div class="container">
+            <div class="sub-title">
+                <h2>
+                    {% if lvl == 'news' %}
+                        Все новости:
+                    {% elif lvl == 'category' %}
+                        Категория: {{ category.name }}
+                    {% elif lvl == 'tag' %}
+                        Тэг: {{ tag.name }}
+                    {% endif %}
+                </h2>
+            </div>
+        </div>
+        <div class="container">
+            <div class="row">
+
+                {% comment %} Список новостей {% endcomment %}
+                <div class="col-md-8">
+                    <div class="list-records">
+                        {% for new in news %}
+                            <div class="new-record">
+                                <div class="row">
+                                    <div class="col-lg-3 col-md-4">
+                                        <div class="image-new-wrap">
+                                            <a href="{{ new.get_absolute_url }}">
+                                                <img src="{% thumbnail new.image 250x250 %}">
+                                            </a>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-9 col-md-8">
+                                        <div class="body-new-wrap">
+                                            <p class="new-date"><small>{{ new.create_time|date:"D d.m.Y" }}</small></p>
+                                            <h4><a href="{{ new.get_absolute_url }}">{{ new.title }}</a></h4>
+                                            <p>{{ new.description|truncatechars:220|safe }}</p>
+                                            <a class="button button-orange button-primary" href="{{ new.get_absolute_url }}">Читать подробнее</a>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        {% endfor %}
+                    </div>
+                </div>
+
+                {% comment %} Сайд бар со списком новостей {% endcomment %}
+                <div class="col-md-4">
+                    <div class="sidebar-right">
+                        <div class="categories-news">
+                            <h3>Категории: </h3>
+                            <ul>
+                                {% for cat in categories %}
+                                    <li {% if cat.name == category.name %}class="active-link"{% endif %}><a href="{{ cat.get_absolute_url }}">{{ cat.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                        <div class="tags-news">
+                            <h3>Тэги: </h3>
+                            <ul>
+                                {% for tg in tags %}
+                                    <li {% if tg.name == tag.name %}class="active-link"{% endif %}><a href="{{ tg.get_absolute_url }}">{{ tg.name }}</a></li>
+                                {% endfor %}
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+
+                {% comment %} Пагинация {% endcomment %}
+                <div class="col-sm-12">
+                    <nav>
+                        <ul class="pagination justify-content-center">
+
+                            {% if lvl == "news" %}
+                                {% if news.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="{% url 'news:news_list' news.previous_page_number %}">Предыдущая</a></li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">Предыдущая</a></li>
+                                {% endif %}
+
+                                {% for page in news.paginator.page_range %}
+                                    {% if page == news.number %}
+                                        <li class="page-item active"><a class="page-link">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'news:news_list' page %}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if news.has_next %}
+                                    <li class="page-item"><a class="page-link" href="{% url 'news:news_list' news.next_page_number %}">Следующая</a></li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">Следующая</a></li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if lvl == "category" %}
+                                {% if news.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="{% url 'news:category_detail' slug news.previous_page_number %}">Предыдущая</a></li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">Предыдущая</a></li>
+                                {% endif %}
+
+                                {% for page in news.paginator.page_range %}
+                                    {% if page == news.number %}
+                                        <li class="page-item active"><a class="page-link">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'news:category_detail' slug page %}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if news.has_next %}
+                                    <li class="page-item"><a class="page-link" href="{% url 'news:category_detail' slug news.next_page_number %}">Следующая</a></li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">Следующая</a></li>
+                                {% endif %}
+                            {% endif %}
+
+                            {% if lvl == "tag" %}
+                                {% if news.has_previous %}
+                                    <li class="page-item"><a class="page-link" href="{% url 'news:tag_detail' slug news.previous_page_number %}">Предыдущая</a></li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">Предыдущая</a></li>
+                                {% endif %}
+
+                                {% for page in news.paginator.page_range %}
+                                    {% if page == news.number %}
+                                        <li class="page-item active"><a class="page-link">{{ page }}</a></li>
+                                    {% else %}
+                                        <li class="page-item"><a class="page-link" href="{% url 'news:tag_detail' slug page %}">{{ page }}</a></li>
+                                    {% endif %}
+                                {% endfor %}
+
+                                {% if news.has_next %}
+                                    <li class="page-item"><a class="page-link" href="{% url 'news:tag_detail' slug news.next_page_number %}">Следующая</a></li>
+                                {% else %}
+                                    <li class="page-item disabled"><a class="page-link">Следующая</a></li>
+                                {% endif %}
+                            {% endif %}
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% comment %}<div class="testing">
+        <h2>fancyBox v3.2 - Thumbnails at the bottom</h2>
+
+        <p class="imglist">
+
+          <a href="https://farm1.staticflickr.com/481/31675815133_70120d7a13_k_d.jpg" data-fancybox="images">
+            <img src="https://farm1.staticflickr.com/481/31675815133_c5c2935c04_m_d.jpg" />
+          </a>
+
+          <a href="https://farm1.staticflickr.com/634/32032792255_bb579dee39_k_d.jpg" data-fancybox="images">
+          <img src="https://farm1.staticflickr.com/634/32032792255_7a599d6cb9_m_d.jpg" />
+          </a>
+
+          <a href="https://source.unsplash.com/ndjyaOp0fOc/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/ndjyaOp0fOc/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/A-fubu9QJxE/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/A-fubu9QJxE/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/rkkr6-2I4sg/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/rkkr6-2I4sg/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/mr_Tg4SI66A/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/mr_Tg4SI66A/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/YEsedBccUEA/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/YEsedBccUEA/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/Hw62tzAkXXE/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/Hw62tzAkXXE/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/Lzx4J_Pb3sk/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/Lzx4J_Pb3sk/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/cZVthlrnlnQ/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/cZVthlrnlnQ/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/vddccTqwal8/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/vddccTqwal8/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/Sj5efgWguDs/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/Sj5efgWguDs/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/Y7y7fe8hrh0/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/Y7y7fe8hrh0/240x160" />
+          </a>
+
+          <a href="https://source.unsplash.com/sYegwYtIqJg/1600x900" data-fancybox="images" data-type="image">
+              <img src="https://source.unsplash.com/sYegwYtIqJg/240x160" />
+          </a>
+
+          <a href="https://c1.staticflickr.com/9/8148/29324593462_abebaddc38_k.jpg" data-fancybox="images">
+              <img src="https://c1.staticflickr.com/9/8148/29324593462_f890687b7a_m.jpg" />
+          </a>
+
+          <a href="https://c2.staticflickr.com/6/5499/30972532232_051e1dc57e_h.jpg" data-fancybox="images">
+              <img src="https://c2.staticflickr.com/6/5499/30972532232_e9a298a0c5_m.jpg" />
+          </a>
+
+          <a href="https://farm1.staticflickr.com/560/31434966252_8e1bc946da_b_d.jpg" data-fancybox="images">
+              <img src="https://farm1.staticflickr.com/560/31434966252_8e1bc946da_m_d.jpg" />
+          </a>
+
+          <a href="https://c1.staticflickr.com/1/357/31876784275_12286240d4_h.jpg" data-fancybox="images">
+              <img src="https://c1.staticflickr.com/1/357/31876784275_fbc9696913_m.jpg" />
+            </a>
+        </p>
+
+    </div>{% endcomment %}
+{% endblock %}
+
+{{% comment %}% block footer_scripts %}
+    <script src="{% static 'libs/fancybox-master/dist/jquery.fancybox.js' %}"></script>
+    <script>
+        $('[data-fancybox="images"]').fancybox({
+          margin : [44,0,22,0],
+          thumbs : {
+            autoStart : true,
+            axis      : 'x'
+          }
+        })
+    </script>
+{% endblock %}{% endcomment %}

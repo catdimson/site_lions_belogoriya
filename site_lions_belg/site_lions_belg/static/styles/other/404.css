@@ -1,0 +1,75 @@
+/*-- fonts --*/
+@font-face {
+  font-family: 'Drazki';
+  src: url("/static/fonts/DRAZKI9/DRAZKI-Regular.ttf") format('truetype');
+  font-weight: normal;
+}
+@font-face {
+  font-family: 'QanelasBold';
+  src: url("/static/fonts/Qanelas/Qanelas-Bold.ttf") format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'QanelasLight';
+  src: url("/static/fonts/Qanelas/Qanelas-Light.ttf") format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Qanelas';
+  src: url("/static/fonts/Qanelas/Qanelas-Thin.ttf") format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+html {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+html body {
+  background: #000000;
+  position: relative;
+  font-family: 'QanelasBold';
+}
+.fone {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.15;
+  background: url("/static/img/account/lion1920x1080_2.jpg");
+  background-size: cover;
+  z-index: 1;
+}
+.not-found-wrap {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+h1 {
+  font-size: 50px;
+  color: #ee912a;
+  margin-bottom: 20px;
+}
+.to-home {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background: #ee912a;
+  border: 1px solid #ee912a;
+  text-decoration: none;
+  color: black;
+}
+.to-home:hover {
+  background: black;
+  color: #ee912a;
+}
+/*# sourceMappingURL=404.css.map */

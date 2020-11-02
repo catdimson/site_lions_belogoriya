@@ -1,0 +1,165 @@
+{% load cms_tags menu_tags static sekizai_tags %}
+
+<!doctype html>
+<html lang="ru">
+    <head>
+        <title>{% block title %}{% endblock title %}</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+        {% comment %}<link rel="stylesheet" href="{% static 'styles/project/preloader.css' %}">{% endcomment %}
+
+        <link rel="icon" href="{% static 'icons/favicon.ico' %}" type= "image/x-icon">
+        <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}" type="image/x-icon">
+        <link rel="apple-touch-icon" href="{% static 'icons/apple-touch-icon.png' %}">
+        <link rel="apple-touch-icon" sizes="57x57" href="{% static 'icons/apple-touch-icon-57x57.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'icons/apple-touch-icon-72x72.png' %}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'icons/apple-touch-icon-76x76.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'icons/apple-touch-icon-114x114.png' %}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'icons/apple-touch-icon-120x120.png' %}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{% static 'icons/apple-touch-icon-144x144.png' %}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'icons/apple-touch-icon-152x152.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon-180x180.png' %}">
+
+        <link href="{% static 'fonts/fontawesome-free-5.13.0-web/css/all.css' %}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        {% comment %}<link href="{% static 'styles/slider_reviews_cms_integration/slider_reviews.css' %}" rel="stylesheet" type="text/css">{% endcomment %}
+
+
+        {% block global_project_styles %}
+            <link href="{% static 'styles/project/styles.css' %}" rel="stylesheet" type="text/css">
+        {% endblock %}
+
+        {% block specific_style %}
+        {% endblock %}
+
+        {% block app_styles %}
+        {% endblock %}
+
+        {% render_block "css" %}
+
+        {% comment %}<script src="{% static 'libs/jquery-compresed/jquery-compresed-3.5.0.min.js' %}"></script>{% endcomment %}
+        <script src="{% static 'libs/jquery-3.4.1-compresed/jquery-3.4.1-compresed.min.js' %}"></script>
+
+        <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js" integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+        <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js" integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+
+    </head>
+    <body>
+        {% cms_toolbar %}
+
+        {% comment %} preloader {% endcomment %}
+        {% comment %}<div class="pre-loader" id="preloader">
+            <div class="preloader-core">
+                <div class="loader">
+                    <div class="l_main">
+                      <div class="l_square"><span></span><span></span><span></span></div>
+                      <div class="l_square"><span></span><span></span><span></span></div>
+                      <div class="l_square"><span></span><span></span><span></span></div>
+                      <div class="l_square"><span></span><span></span><span></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>{% endcomment %}
+
+        <div class="container">
+            <div class="glob-wrapper">
+            {% block login %}
+                <nav class="navbar navbar-expand-lg">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav mr-auto">
+                            {#{% if user.username %}#}
+                            {% if request.account %}
+                                <li class="nav-item nav-link hello">Здравствуйте, {{ request.account.0.name.first_name }} {{ request.account.0.name.last_name }}!</li>
+                                {% if request.account %}
+                                    <li class="nav-item"><a href="{{ request.account.0.get_absolute_url }}" class="nav-link">Личный кабинет</a></li>
+                                    {% comment %}<h2>Есть такой спортсмен: пояс - {{ request.sportsman.0.belt }}</h2>{% endcomment %}
+                                {% endif %}
+                                <li class="nav-item"><a href="{% url 'registration:reg_logout' %}" class="nav-link">Выйти ({{ request.account.0.name.first_name }} {{ request.account.0.name.last_name }})</a></li>
+                            {% else %}
+                                <li class="nav-item nav-link hello">Здравствуйте, гость!</li>
+                                {% comment %}<li class="nav-item"><a href="{% url 'registration:reg_registration' %}" class="nav-link">Регистрация</a></li>{% endcomment %}
+                                <li class="nav-item"><a href="{% url 'registration:reg_login' %}" class="nav-link">Войти</a></li>
+                            {% endif %}
+                        </ul>
+
+                    </div>
+                </nav>
+            {% endblock %}
+
+            <div class="header-content-wrapper">
+                {% block header %}
+                    <header class="header">
+                        <div class="container">
+                            <div class="row">
+                                <div class="col-lg-3 offset-lg-0 offset-md-0 col-md-5 offset-sm-2 col-sm-8 offset-1 col-10">
+                                    {% static_placeholder "logo" %}
+                                </div>
+                                <div class="col-lg-9 col-md-7">
+                                    <div class="header-top">
+                                        <div class="container">
+                                            {% static_placeholder "top-header" %}
+                                        </div>
+                                    </div>
+                                    <div class="header-bottom">
+                                        <div class="container">
+                                            <ul class="nav">
+                                                {% show_menu 0 100 100 100 %}
+                                            </ul>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </header>
+                {% endblock %}
+
+                <div class="title-content">
+                    {% block title_content %}
+                        <div class="container">
+                            <h1>{% page_attribute "page_title" %}</h1>
+                        </div>
+                    {% endblock %}
+                </div>
+
+                <div class="content-wrap">
+                    {% block content %}
+                    {% endblock content %}
+                </div>
+
+            </div>
+            <div class="footer-wrapper">
+                {% block footer %}
+                {% endblock %}
+            </div>
+            </div>
+        </div>
+
+        {% render_block "js" %}
+
+        {% comment %} JS-файлы, необходимые для работы bootstrap 4 {% endcomment %}
+        {% comment %}<script src="https://code.jquery.com/jquery-3.4.1.slim.min.js" integrity="sha384-J6qa4849blE2+poT4WnyKhv5vZF5SrPo0iEjwBvKU7imGFAV0wwj1yYfoRSJoZ+n" crossorigin="anonymous"></script>{% endcomment %}
+
+        <script>
+            $(document).ready(function() {
+                $('#preloader').fadeOut(500);
+            });
+        </script>
+
+        {% block footer_scripts %}
+        {% endblock %}
+
+        <div id="button-up">
+            <div class="button-up">
+                <i class="fas fa-arrow-up"></i>
+            </div>
+        </div>
+    </body>
+</html>

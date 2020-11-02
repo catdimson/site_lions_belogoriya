@@ -1,0 +1,52 @@
+{% extends 'fullwidth.html' %}
+{% load static thumbnail %}
+
+{% block specific_style %}
+    <script src="{% static 'libs/jgallery-2.2.1/dist/js/jgallery.js' %}"></script>
+{% endblock %}
+
+{% block testing_block %}
+    <div id="gallery">
+    </div>
+    <script type="text/javascript">
+        document.querySelector('#gallery').appendChild(JGallery.create([{
+            title: 'Images',
+            items: [
+                {
+                    url: '{% static "img/pattern.jpg" %}',
+                    thumbUrl: '{% thumbnail new.image 250x250 %}',
+                    title: 'Photo1',
+                    hash: 'photo-1'
+                },
+                {
+                    url: 'images/large/2.jpg',
+                    thumbUrl: 'images/thumbs/2.jpg',
+                    title: 'Photo2',
+                    hash: 'photo-2'
+                },
+                {
+                    url: 'images/large/3.jpg',
+                    thumbUrl: 'images/thumbs/3.jpg',
+                    title: 'Photo3',
+                    hash: 'photo-3'
+                }
+            ]
+        }, {
+            title: 'HTML',
+            items: [
+                {
+                    element: JGallery.createElement('<video src="SampleVideo_1280x720_1mb.mp4" loop autoplay/>'),
+                    thumbElement: JGallery.createElement('<span>Video</span>'),
+                    title: 'Video',
+                    hash: 'video'
+                },
+                {
+                    element: JGallery.createElement('<span style="font-size: 10vmax">Any HTML content</span>'),
+                    thumbElement: JGallery.createElement('<span>HTML</span>'),
+                    title: 'HTML',
+                    hash: 'html'
+                }
+            ]
+        }]).getElement());
+    </script>
+{% endblock %}

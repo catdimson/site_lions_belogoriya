@@ -1,0 +1,85 @@
+@PATH_IMG:                "/static/img";
+@PATH_FONTS:              "/static/fonts";
+@COLOR_ORANGE_NORMAL:     rgb(238, 145, 42);
+
+/*-- fonts --*/
+// drazki
+@font-face {
+  font-family: 'Drazki';
+  src: url("@{PATH_FONTS}/DRAZKI9/DRAZKI-Regular.ttf") format('truetype');
+  font-weight: normal;
+}
+// qanelas
+@font-face {
+  font-family: 'QanelasBold';
+  src: url("@{PATH_FONTS}/Qanelas/Qanelas-Bold.ttf") format('truetype');
+  font-weight: 700;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'QanelasLight';
+  src: url("@{PATH_FONTS}/Qanelas/Qanelas-Light.ttf") format('truetype');
+  font-weight: 300;
+  font-style: normal;
+}
+@font-face {
+  font-family: 'Qanelas';
+  src: url("@{PATH_FONTS}/Qanelas/Qanelas-Thin.ttf") format('truetype');
+  font-weight: 100;
+  font-style: normal;
+}
+
+@PRIMARY_FONT:            'QanelasLight';
+@SECONDARY_FONT:          'Drazki';
+
+html {
+  display: flex;
+  justify-content: center;
+  height: 100%;
+  width: 100%;
+}
+html body {
+  background: rgb(0, 0, 0);
+  position: relative;
+  font-family: 'QanelasBold';
+}
+.fone {
+  position: fixed;
+  width: 100%;
+  height: 100%;
+  top: 0;
+  left: 0;
+  opacity: 0.15;
+  background: url("@{PATH_IMG}/account/lion1920x1080_2.jpg");
+  background-size: cover;
+  z-index: 1;
+}
+.not-found-wrap {
+  position: relative;
+  z-index: 10;
+  width: 100%;
+  height: 100%;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  flex-direction: column;
+}
+h1 {
+  font-size: 50px;
+  color: @COLOR_ORANGE_NORMAL;
+  margin-bottom: 20px;
+}
+.to-home {
+  display: inline-block;
+  padding: 10px 20px;
+  border-radius: 5px;
+  background: @COLOR_ORANGE_NORMAL;
+  border: 1px solid @COLOR_ORANGE_NORMAL;
+  text-decoration: none;
+  color: black;
+
+  &:hover {
+    background: black;
+    color: @COLOR_ORANGE_NORMAL
+  }
+}

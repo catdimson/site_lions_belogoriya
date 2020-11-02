@@ -1,0 +1,114 @@
+{% load static thumbnail %}
+
+<!doctype html>
+<html lang="ru">
+    <head>
+        <title>Личный кабинет ({{ account.name.first_name }} {{ account.name.last_name }})</title>
+        <meta name="viewport" content="width=device-width,initial-scale=1">
+        <meta http-equiv="content-type" content="text/html; charset=UTF-8">
+
+        <link rel="icon" href="{% static 'icons/favicon.ico' %}" type= "image/x-icon">
+        <link rel="shortcut icon" href="{% static 'icons/favicon.ico' %}" type="image/x-icon">
+        <link rel="apple-touch-icon" href="{% static 'icons/apple-touch-icon.png' %}">
+        <link rel="apple-touch-icon" sizes="57x57" href="{% static 'icons/apple-touch-icon-57x57.png' %}">
+        <link rel="apple-touch-icon" sizes="72x72" href="{% static 'icons/apple-touch-icon-72x72.png' %}">
+        <link rel="apple-touch-icon" sizes="76x76" href="{% static 'icons/apple-touch-icon-76x76.png' %}">
+        <link rel="apple-touch-icon" sizes="114x114" href="{% static 'icons/apple-touch-icon-114x114.png' %}">
+        <link rel="apple-touch-icon" sizes="120x120" href="{% static 'icons/apple-touch-icon-120x120.png' %}">
+        <link rel="apple-touch-icon" sizes="144x144" href="{% static 'icons/apple-touch-icon-144x144.png' %}">
+        <link rel="apple-touch-icon" sizes="152x152" href="{% static 'icons/apple-touch-icon-152x152.png' %}">
+        <link rel="apple-touch-icon" sizes="180x180" href="{% static 'icons/apple-touch-icon-180x180.png' %}">
+
+        <link href="{% static 'styles/account/account_styles.css' %}" rel="stylesheet" type="text/css">
+
+        <link href="{% static 'fonts/fontawesome-free-5.13.0-web/css/all.css' %}" rel="stylesheet" type="text/css">
+        <link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/css/bootstrap.min.css" integrity="sha384-Vkoo8x4CGsO3+Hhxv8T/Q5PaXtkKtu6ug5TOeNV6gBiFeWPGFN9MuhOf23Q9Ifjh" crossorigin="anonymous">
+
+        {% block addons_css %}
+
+        {% endblock %}
+
+        {% block specific_style %}
+        {% endblock %}
+
+        {% block jquery %}
+            <script src="{% static 'libs/jquery-3.4.1-compresed/jquery-3.4.1-compresed.min.js' %}"></script>
+            <script src="https://cdn.jsdelivr.net/npm/popper.js@1.16.0/dist/umd/popper.min.js"
+                    integrity="sha384-Q6E9RHvbIyZFJoft+2mJbHaEWldlvI9IOYy5n3zV9zzTtmI3UksdQRVvoxMfooAo" crossorigin="anonymous"></script>
+            <script src="https://stackpath.bootstrapcdn.com/bootstrap/4.4.1/js/bootstrap.min.js"
+                    integrity="sha384-wfSDF2E50Y2D1uUdj0O3uMBJnjuUD4Ih7YwaYd1iqfktj0Uod8GCExl3Og8ifwB6" crossorigin="anonymous"></script>
+        {% endblock %}
+
+        {% block jquery-addons %}
+        {% endblock %}
+    </head>
+
+    <body>
+    {% if account %}
+        <div class="fone"></div>
+        <div class="account-wrapper">
+        <section class="header-ac">
+            <div class="nav-panel">
+                <nav class="navbar navbar-expand-lg">
+                    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarSupportedContent" aria-controls="navbarSupportedContent" aria-expanded="false" aria-label="Toggle navigation">
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                        <span class="navbar-toggler-icon"></span>
+                    </button>
+
+                    <div class="collapse navbar-collapse" id="navbarSupportedContent">
+                        <ul class="navbar-nav ml-auto">
+                            <li class="nav-item"><a href="/" class="nav-link">На главную</a></li>
+                            <li class="nav-item"><a href="{% url 'registration:reg_logout' %}" class="nav-link">Выйти ({{ account.name.first_name }} {{ account.name.last_name }})</a></li>
+                        </ul>
+                    </div>
+                </nav>
+            </div>
+        </section>
+        <section class="main-ac">
+            <div {% comment %}class="container"{% endcomment %}>
+                <div class="content">
+                    <div class="left-sidebar-area mt-4 mr-4">
+                        <div class="sidebar-item">
+                            {% block photo %}
+                                <div class="photo-thumbnail">
+                                    <img class="img-fluid" src="
+                                        {% if not account.photo %}
+                                            {% static 'img/account/not_photo.jpg' %}
+                                        {% else %}
+                                            {% thumbnail account.photo 250x250 %}
+                                        {% endif %}"
+                                         title="{{ account.name }}">
+                                </div>
+                            {% endblock %}
+                            <a href="{{ account.get_absolute_url }}{% comment %}{% url 'account:account_index' account.slug %}{% endcomment %}" class="{% block link1 %}{% endblock %}">О спортсмене</a>
+                        </div>
+                        <div class="sidebar-item">
+                            <a href="{{ account.get_update_url }}{% comment %}{% url 'account:account_edit' account.slug %}{% endcomment %}" class="{% block link2 %}{% endblock %}">Редактировать данные</a>
+                        </div>
+                        <div class="sidebar-item">
+                            <a href="{% url 'account:account_tournaments' %}" class="{% block link3 %}{% endblock %}">Турнирные сетки</a>
+                        </div>
+                        <div class="sidebar-item">
+                            <a href="{% url 'account:account_rating' %}" class="{% block link4 %}{% endblock %}">Рейтинги</a>
+                        </div>
+                        <div class="sidebar-item">
+                            <a href="{% url 'account:account_selection' %}" class="{% block link5 %}{% endblock %}">Подбор соперника</a>
+                        </div>
+                    </div>
+                    <div class="main-content-area mt-4">
+                        {% block content-area %}
+                        {% endblock %}
+                    </div>
+                </div>
+            </div>
+        </section>
+        <section class="footer-ac">
+            {% block specific_scripts %}
+            {% endblock %}
+        </section>
+        </div>
+    {% endif %}
+        {% comment %}<h1>Hello! {{ account.0.name.first_name }} {{ account.0.name.last_name }}</h1>{% endcomment %}
+    </body>
+</html>

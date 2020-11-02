@@ -1,0 +1,25 @@
+{% extends 'registration/base_registration.html' %}
+
+{% block title_content %}
+    <div class="container">
+        <h1>Авторизация пользователя</h1>
+    </div>
+{% endblock %}
+
+{% block registration_content %}
+    <div class="regs-wrapper">
+        <div class="container">
+            <div class="row">
+                <div class="col-md-6 offset-md-3">
+                    <div class="wrapper-form">
+                        <form action="" method="post">
+                            {% csrf_token %}
+                            {{ form.as_p }}
+                            <input type="submit" class="button button-orange button-primary" value="Войти в систему">
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

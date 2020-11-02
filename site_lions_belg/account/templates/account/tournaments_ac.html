@@ -1,0 +1,228 @@
+{% extends 'account/base_account.html' %}
+{% load static thumbnail %}
+
+{% block link3 %}link-item-active{% endblock %}
+
+{% block content-area %}
+    <h1>Турнирные сетки</h1>
+    <h4>{{ tournament.name }}</h4>
+    <br class="">
+
+    <div class="block-choices-tournaments">
+        <form action="{% url 'account:account_tournaments' %}" method="get">       {% comment %} атрибут action пустой, значит отправляться форма будет на view этой страницы {% endcomment %}
+            <label for="tournaments" class="mr-2">Выберите турнир: </label>
+            <div class="d-inline-block mr-4">
+                <p>
+                <select id="tournaments" name="tournam_id">
+                    <option value="{{ tournament.id }}">{{ tournament.name }}</option>
+                    {% for tourn in all_tournaments %}
+                        <option value="{{ tourn.id }}">{{ tourn.name }}</option>
+                    {% endfor %}
+                </select>
+            </p>
+            </div>
+            <div class="d-inline-block">
+                <input type="submit" class="button button-orange button-primary" value="Выбрать">
+            </div>
+        </form>
+    </div>
+    <div id="tables-wrap" style="opacity: 0">
+        {% for weight_cat, battle_pairs in tournaments.items %}
+            <div class="table-wrap">
+                <div class="title-weight-category">
+                    <h5>Весовая: {{ weight_cat }}</h5>
+                </div>
+                <div class="{{ weight_cat }} row row-table">
+                    {% for stage, pairs in battle_pairs.items %}
+                        {% if stage == "1/16" %}
+                            <div class="col stage_1_16" style="order: 1">
+                        {% elif stage == "1/8" %}
+                            <div class="col stage_1_8" style="order: 2">
+                        {% elif stage == "1/4" %}
+                            <div class="col stage_1_4" style="order: 3">
+                        {% elif stage == "1/2" %}
+                            <div class="col stage_1_2" style="order: 4">
+                        {% elif stage == "Финал" %}
+                            <div class="col stage_1" style="order:5">
+                        {% endif %}
+                                {#<p style="color: white; font-size: 18px">Стадия: {{ stage }}</p>#}
+                                {% for pair in pairs %}
+                                    <div class="pair-wrap ">
+                                        <div class="pair">
+                                            <div class="player player1">
+                                                <div class="small-photo">
+                                                    {% if pair.sportsman1.photo %}
+                                                        <img src="{% thumbnail pair.sportsman1.photo 100x100 %}">
+                                                    {% else %}
+                                                        <img src="{% static 'img/account/logo_small.jpg' %}">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="name name1">
+                                                    {{ pair.sportsman1.name.first_name }} {{ pair.sportsman1.name.last_name }}
+                                                </div>
+                                            </div>
+                                            <div class="player player2">
+                                                <div class="small-photo">
+                                                    {% if pair.sportsman2.photo %}
+                                                        <img src="{% thumbnail pair.sportsman2.photo 100x100 %}">
+                                                    {% else %}
+                                                        <img src="{% static 'img/account/logo_small.jpg' %}">
+                                                    {% endif %}
+                                                </div>
+                                                <div class="name name2">
+                                                    {{ pair.sportsman2.name.first_name }} {{ pair.sportsman2.name.last_name }}
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                {% endfor %}
+                            </div>
+                    {% endfor %}
+                </div>
+            </div>
+        {% endfor %}
+        <div class="hidden-winners-block" style="display: none">
+            {% for weight, winner in winners.items %}
+                <div class="winner-card"
+                     data-weight="{{ weight }}"
+                     data-source-photo="{% if winner.photo %}{% thumbnail winner.photo 100x100 %}{% else %}{% static 'img/account/logo_small.jpg' %}{% endif %}"
+                     data-name="{% if winner.name %}{{ winner.name.first_name }} {{ winner.name.last_name }}{% else %}{{ winner }}{% endif %}">
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
+
+{% block specific_scripts %}
+    <script>
+        $(document).ready(function() {
+            // функция сортировки
+            function comp(a,b) {
+                if ( a.style.order < b.style.order ) {
+                    return -1;  // первый сравниваемый элемент будет расположен по меньшему индексу
+                }
+                if ( a.style.order > b.style.order ) {
+                    return 1;  // второй сравниваемый элемент будет расположен по меньшему индексу
+                }
+                // если первый аргумент равен второму, то элементы массива останутся неизменными
+                // по отношению друг к другу но будут отсортированы по отношению ко всем другим элементам
+                return 0;
+            }
+
+            // весовые
+            let weightsCollection = $('.row-table');
+
+            let weights = [];
+            for (let i = 0; i < weightsCollection.length; i++) {
+                weights.push(weightsCollection[i].classList[0])
+            }
+
+            let winners = $('.hidden-winners-block .winner-card');
+            console.log("КОЛЛЕКЦИЯ ПОБЕДИТЕЛЕЙ: ");
+            console.log(winners)
+
+            // проходим по всем весовым
+            let heightBlock;
+            for (let j = 0; j < weights.length; j++) {
+                let query = '.row-table.' + weights[j] + ' > .col'
+                let $cols = $(query);
+                $cols.sort(comp);
+
+                // добавляем классы для отрисовки псевдоклассов у элементов
+                let col1, col2, offset;
+                for (let i = 0; i < $cols.length - 1; i++) {
+
+                    // если первая колонка, то не будет псевдокласса before
+                    if (i === 0) {
+                        let cls = 'cls-after-' + i;
+                        $cols[0].classList.add(cls);
+                    } else if (i === $cols.length - 2) {
+                        let cls = 'cls-after-' + i;
+                        $cols[i].classList.add(cls);
+                        cls = 'cls-before';
+                        $cols[i].classList.add(cls);
+                        cls = 'cls-finish-after'
+                        $cols[i + 1].classList.add(cls);
+                        cls = 'cls-before';
+                        $cols[i + 1].classList.add(cls);
+                    }
+                    else {
+                        let cls = 'cls-after-' + i;
+                        $cols[i].classList.add(cls);
+                        cls = 'cls-before';
+                        $cols[i].classList.add(cls);
+                    }
+
+                    // если 2 колонки - отдельный случай
+                    if ($cols.length === 2) {
+                        let cls = 'cls-before';
+                        $cols[i + 1].classList.add(cls);
+                        cls = 'cls-finish-after';
+                        $cols[i + 1].classList.add(cls);
+                    }
+
+                    // располагаем элементы в нужном порядке
+                    col1 = $cols[i].getElementsByClassName('pair-wrap');
+                    col2 = $cols[i + 1].getElementsByClassName('pair-wrap');
+                    let num_elem = 0;
+                    for (let k = 0; k < col1.length; k += 2) {
+                        heightBlock = col1[k + 1].offsetHeight;
+                        console.log("----- Колонка " + i + " -----")
+                        offset = ((col1[k].offsetTop + (col1[k + 1].offsetTop + heightBlock)) / 2) - heightBlock / 2;
+                        console.log("Отступ элемента " + k + " равен: " + offset)
+                        col2[num_elem].style.top = offset - heightBlock * num_elem + "px";
+                        console.log("Сдвигается элемент №" + num_elem + " из колонки " + (i + 1) + " на величину: " + col2[num_elem].style.top);
+                        num_elem++;
+                        console.log()
+                    }
+                    num_elem = 0;
+                }
+
+                // если всего одна весовая была, то предыдущий цикл не выполнялся и финишный класс .finish-after
+                // не присвоится, а значит нужно добавить проверку после и присвоить это класс при выполнении проверки
+                if ($cols.length === 1) {
+                    $cols[0].classList.add('cls-finish-after');
+                    $cols[1].classList.add('cls-before');
+                }
+
+                // добавляем финишную колонку
+                let finish_block_offset = $cols[$cols.length-1].getElementsByClassName('pair-wrap')[0].offsetTop;
+                console.log($cols[$cols.length-1]);
+                let $block_input = '.row-table.' + weights[j];
+                $block_input = $($block_input);
+
+                let src_photo = '';
+                let fio = '';
+
+                for (let i = 0; i<winners.length; i++) {
+                    if (winners[i].getAttribute('data-weight') === weights[j] + ' кг') {
+                        src_photo = winners[i].getAttribute('data-source-photo');
+                        fio = winners[i].getAttribute('data-name');
+                        break;
+                    }
+                }
+
+                let winner_col = $('' +
+                '<div class="col stage_winner cls-before" style="order:10">\n' +
+                    '<div class="pair-wrap" ' + 'style="top:'+ finish_block_offset + 'px"' + '>\n' +
+                        '<div class="pair">\n' +
+                            '<div class="player player1 player-winner">\n' +
+                                '<div class="small-photo">\n' +
+                                    '<img src="' + src_photo + '">\n' +
+                                '</div>\n' +
+                                '<div class="name name1">'+ fio +
+                                '</div>\n' +
+                            '</div>\n' +
+                        '</div>\n' +
+                    '</div>\n' +
+                '</div>'
+                )
+                $block_input.append(winner_col);
+
+            }
+
+            $('.hidden-winners-block').remove();
+            $('#tables-wrap')[0].style.opacity = 1;
+        });
+    </script>
+{% endblock %}
